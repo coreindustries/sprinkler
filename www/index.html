@@ -39,7 +39,7 @@ $("#off-button").mouseup(function(){
 	toggle();
 });
 
-var toggle_status = true; // on
+var toggle_status = false; // off by default
 function toggle(){
 	console.log("toggle");
 	if(toggle_status){
@@ -62,7 +62,7 @@ socket.on('time', function (data) {
 });
 
 $(document).ready(function(){
-	$("#off-button").hide();
+	$("#on-button").hide();
 });
 
  
