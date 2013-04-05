@@ -1,3 +1,13 @@
-jqm-content{
+
+
+.jqm-content, .jqm-header{
+	padding: 5px;
 	text-align:center;
+}
+
+#time{
+	display: inline;
+	color: #999;
+	margin-left:20px;
+
 }
