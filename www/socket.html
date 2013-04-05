@@ -1,0 +1,14 @@
+<script src="js/jquery-1.9.1.min.js"></script>
+<script src="js/socket.io.js"></script>
+<div id="time">time</div>
+<script>
+  var socket = io.connect('http://localhost');
+  socket.on('time', function (data) {
+    // console.log(data);
+    var d = new Date(data.time);
+    //var dd = d.getHours() + ":" + d.getMinutes() + ":" +d.getSeconds();
+    var dd = d.toLocaleString();
+    $("#time").html(dd);
+    // socket.emit('my other event', { my: 'data' });
+  });
+</script>
