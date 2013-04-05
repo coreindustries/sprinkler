@@ -1,20 +1,10 @@
 {
-  "name": "geddy-boilerplate",
+  "name": "sprinker",
   "version": "0.0.1",
-  "author": "",
+  "author": "corey szopinski",
   "dependencies": {
-    "geddy": "git://github.com/cpbtechnology/geddy",
-    "swig": "*",
     "socket.io": "*",
-    "underscore": "*",
-    "chai": "*",
-    "grunt-beautify": "0.1.0",
-    "grunt-crusher": "0.1.0",
-    "grunt-jslint": "0.1.0",
-    "grunt-compass": "0.3.8",
-    "grunt-css": "0.3.2",
-    "grunt-contrib-requirejs": "0.1.0",
-    "grunt-contrib-yuidoc": "0.3.2"
+    "moment": "*"
   },
   "devDependencies": {},
   "engines": {

@@ -9,21 +9,24 @@
 	display: inline;
 	color: #999;
 	margin-left:20px;
+}
 
+li{
+	list-style: none;
 }
 
 
 .ui-btn-up-a{
-	border: 1px solid #f4c63f /*{e-bup-border}*/;
-	background: #fadb4e /*{e-bup-background-color}*/;
+	/*border: 1px solid #f4c63f /*{e-bup-border}*/;*/
+	/*background: #fadb4e /*{e-bup-background-color}*/;*/
 }
 
 .ui-btn-hover-a {
-	border: 1px solid 		#f2c43d /*{e-bhover-border}*/;
-	background: 			#fbe26f /*{e-bhover-background-color}*/;
+	/*border: 1px solid 		#f2c43d /*{e-bhover-border}*/;*/
+	/*background: 			#fbe26f /*{e-bhover-background-color}*/;*/
 }
 
 .ui-btn-down-a {
-	border: 1px solid 		#000 /*{a-bdown-border}*/;
-	background: 			#222 /*{a-bdown-background-color}*/;
+	/*border: 1px solid 		#000 /*{a-bdown-border}*/;*/
+	/*background: 			#222 /*{a-bdown-background-color}*/;*/
 	}
