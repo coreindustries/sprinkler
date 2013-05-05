@@ -3,13 +3,14 @@ sprinkler
 
 node + raspberry pi based sprinkler system
 
-based on express with socket.io for triggers and pi-gpio for talking to the Raspberry PI gpio pins to tigger a relay.
+based on geddy with socket.io for triggers and pi-gpio for talking to the Raspberry PI gpio pins to tigger a relay.
 
 
 ### setup
-npm install
+[sudo] npm install -g geddy
 
 
-### to run socket server (runs on localhost:8001)
-1. go into /source
-2. npm install
+
+### to run socket server (runs on localhost:4000)
+1. cd /sprinkler
+2. geddy

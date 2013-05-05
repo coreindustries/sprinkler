@@ -1,4 +1,4 @@
-[Sun, 05 May 2013 18:06:54 GMT] INFO Server starting with config: {
+[Sun, 05 May 2013 18:56:06 GMT] INFO Server starting with config: {
   "environment": "development",
   "workers": 1,
   "port": 4000,
@@ -33,5 +33,5 @@
     "defaultAdapter": "memory"
   }
 }
-[Sun, 05 May 2013 18:06:54 GMT] INFO Creating 1 worker process.
-[Sun, 05 May 2013 18:06:58 GMT] INFO Server worker running in development on port 4000 with a PID of: 11620
+[Sun, 05 May 2013 18:56:06 GMT] INFO Creating 1 worker process.
+[Sun, 05 May 2013 18:56:10 GMT] INFO Server worker running in development on port 4000 with a PID of: 11765
