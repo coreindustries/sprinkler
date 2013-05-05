@@ -1,0 +1,13 @@
+{
+  "name": "node-gpio-test",
+  "version": "0.0.1",
+  "author": "corey szopinski",
+  "dependencies": {
+    "pi-gpio": "*",
+    "async": "*"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": "0.8.x"
+  }
+}
