@@ -1,4 +1,4 @@
-var io = require('socket.io').listen(80);
+var io = require('../geddy/node_modules/socket.io').listen(80);
 
 io.sockets.on('connection', function (socket) {
   socket.emit('hello', { hello: 'world' });
