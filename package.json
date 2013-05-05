@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "author": "corey szopinski",
   "dependencies": {
-    "socket.io": "*",
     "moment": "*",
     "express": "3.x", 
     "pi-gpio": "*"
