@@ -1,0 +1,37 @@
+[Sun, 05 May 2013 18:06:54 GMT] INFO Server starting with config: {
+  "environment": "development",
+  "workers": 1,
+  "port": 4000,
+  "spdy": null,
+  "ssl": null,
+  "debug": true,
+  "rotateWorkers": false,
+  "rotationWindow": 7200000,
+  "rotationTimeout": 300000,
+  "logDir": "/home/pi/sprinkler/sprinkler/log",
+  "gracefulShutdownTimeout": 30000,
+  "heartbeatInterval": 5000,
+  "heartbeatWindow": 20000,
+  "staticFilePath": "/home/pi/sprinkler/sprinkler/public",
+  "sessions": {
+    "store": "memory",
+    "key": "sid",
+    "expiry": 1209600
+  },
+  "cookieSessionKey": "sdata",
+  "i18n": {
+    "defaultLocale": "en-us",
+    "loadPaths": [
+      "/home/pi/sprinkler/sprinkler/config/locales"
+    ]
+  },
+  "hostname": null,
+  "fullHostname": null,
+  "connectCompatibility": false,
+  "detailedErrors": true,
+  "model": {
+    "defaultAdapter": "memory"
+  }
+}
+[Sun, 05 May 2013 18:06:54 GMT] INFO Creating 1 worker process.
+[Sun, 05 May 2013 18:06:58 GMT] INFO Server worker running in development on port 4000 with a PID of: 11620
