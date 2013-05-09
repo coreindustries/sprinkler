@@ -2,5 +2,38 @@
 <div class="hero-unit geddy-welcome-box">
   <h1>Sprinkler</h1>
   <p></p>
-  <p><%- linkTo('Garden & Front On', '/actions/both', {class: 'btn btn-primary btn-large'}) %></p>
+  <p><%- linkTo('Garden & Front On', '/actions/both', {class: 'btn btn-primary btn-large', id: 'btn_both'}) %></p>
 </div>
+
+<script>
+
+var state = 0; // off by default
+
+$('#btn_both').click(function(e){
+	e.preventDefault();
+	console.log("press");
+
+	var page = 'both_on.json';
+	var status = "Off";
+
+	if(state == 0){ // toggle on
+		state = 1;
+		page = 'both_on.json';
+		msg = 'OFF';
+	}else{
+		state = 0;  // toggle off
+		page = 'both_off.json';
+		msg = 'Garden & Front On';
+	}
+
+	$.ajax({
+		url: '/actions/' + page
+	}).done(function(data){
+		$('#btn_both').html(msg);
+		console.log(data);
+	});
+
+});
+
+
+</script>
