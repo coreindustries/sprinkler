@@ -2,7 +2,9 @@
   "name": "sprinkler",
   "version": "0.0.1",
   "author": "",
-  "dependencies": {},
+  "dependencies": {
+  	"pi-gpio" : "*"
+  	},
   "devDependencies": {},
   "engines": {
     "node": "0.8.x"

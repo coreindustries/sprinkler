@@ -1,3 +1,7 @@
+var gpio = require("pi-gpio");
+
+
+
 var Actions = function () {
   this.respondsWith = ['html', 'json', 'xml', 'js', 'txt'];
 
@@ -6,44 +10,67 @@ var Actions = function () {
     this.respond({params: params});
   };
 
-  this.on = function (req, resp, params){
-    geddy.log.debug("ON CONTROLLER");
-    this.respond({params: params});
-  }
 
-  this.add = function (req, resp, params) {
-    this.respond({params: params});
-  };
-
-  this.create = function (req, resp, params) {
-    // Save the resource, then display index page
-    this.redirect({controller: this.name});
-  };
 
   this.show = function (req, resp, params) {
     geddy.log.debug(this.name+" CONTROLLER : "+params.id);
-    // geddy.log.debug(params);
-    if(params.id == "both"){
-      geddy.log.debug("**BOTH");
+    var vars = {};
+
+
+    /**
+    TURN BOTH SPRINKLERS ON
+    */
+    if(params.id == "both_on"){
+      geddy.log.debug("**BOTH ON");
+      vars.action = "both";
+
+
+
+      gpio.open(22, "output", function(err) {        // Open pin 16 for output
+        if(err){ geddy.log.error(JSON.stringify(err)); }
+        
+        gpio.write(22, 1, function() {            // Set pin 16 high (1)
+          geddy.log.debug('*** GPIO ON');
+          gpio.close(22);                        // Close pin 16
+        });
+      });
     }
+
+
+
+    /**
+    TURN BOTH SPRINKLERS OFF
+    */
+    if(params.id == "both_off"){
+      geddy.log.debug("**BOTH OFF");
+      vars.action = "both";
+
+
+
+      gpio.open(22, "output", function(err) {        // Open pin 16 for output
+        if(err){ geddy.log.error(JSON.stringify(err)); }
+        
+        gpio.write(22, 0, function() {            // Set pin 16 high (1)
+          geddy.log.debug('*** GPIO ON');
+          gpio.close(22);                        // Close pin 16
+        });
+      });
+    }
+
+
+
+
+
+
+
     if(params.id == "front"){
       geddy.log.debug("*FRONT");
+      vars.action = "front";
     }
-    this.respond({params: params});
+    this.respond({params: params, vars: vars});
   };
 
-  this.edit = function (req, resp, params) {
-    this.respond({params: params});
-  };
 
-  this.update = function (req, resp, params) {
-    // Save the resource, then display the item page
-    this.redirect({controller: this.name, id: params.id});
-  };
-
-  this.destroy = function (req, resp, params) {
-    this.respond({params: params});
-  };
 
 };
 
