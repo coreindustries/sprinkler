@@ -41,7 +41,7 @@ var Actions = function () {
     DEFAULT ACTION HANDLER
     */
   this.show = function (req, resp, params) {
-
+    var vars = {};
 
     /**
     TURN BOTH SPRINKLERS ON
@@ -60,7 +60,6 @@ var Actions = function () {
     */
     if(params.id == "both_off"){
       geddy.log.debug("**BOTH OFF");
-      vars.action = "both";
 
       this.turnOff('front');
       this.turnOff('garden');
@@ -76,9 +75,38 @@ var Actions = function () {
     TURN FRONT SPRINKLERS ON
     */
     if(params.id == "front_on"){
-      geddy.log.debug("*FRONT");
-      vars.action = "front";
+      geddy.log.debug("*FRONT ON");
+      this.turnOn('front');
     }
+
+    /**
+    TURN FRONT SPRINKLERS OFF
+    */
+    if(params.id == "front_off"){
+      geddy.log.debug("*FRONT OFF");
+      this.turnOff('front');
+    }
+
+
+    /**
+    TURN GARDEN SPRINKLERS ON
+    */
+    if(params.id == "garden_on"){
+      geddy.log.debug("*garden ON");
+      this.turnOn('garden');
+    }
+
+    /**
+    TURN GARDEN SPRINKLERS OFF
+    */
+    if(params.id == "garden_off"){
+      geddy.log.debug("*garden OFF");
+      this.turnOff('garden');
+    }
+
+
+
+
     this.respond({params: params, vars: vars});
   };
 
