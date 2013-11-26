@@ -1,0 +1,15 @@
+{
+  "name": "sprinkler2",
+  "version": "0.0.1",
+  "author": "",
+  "dependencies": {},
+  "devDependencies": {
+	"pi-gpio" : "0.0.2",
+  	"geddy" : "0.11.8",
+    "jlivetime" : "0.0.11",
+    "socket.io" : "0.9.16"
+  	},
+  "engines": {
+    "node": "0.8.x"
+  }
+}

@@ -1,0 +1,126 @@
+<script src="/socket.io/socket.io.js"></script>
+
+<div class="hero-unit geddy-welcome-box">
+  <h1>Sprinkler</h1>
+  <p><%- linkTo('Garden & Front On', '/actions/both', {class: 'btn btn-primary btn-large', id: 'btn_both'}) %></p>
+  <p></p>
+  <p><%- linkTo('Front On', '/actions/front_on', {class: 'btn btn-primary btn-large', id: 'btn_front'}) %></p>
+  <p><%- linkTo('Garden On', '/actions/garden_on', {class: 'btn btn-primary btn-large', id: 'btn_garden'}) %></p>
+</div>
+
+<div id="stats">
+	<ul>
+		<li>Last started: <span id="last_started"></span></li>
+		<li><span id="duration"></span></li>
+	</ul>
+</div><!-- /stats -->
+
+<script>
+
+var state = 0; // off by default
+
+var socket = io.connect('http://localhost');
+
+
+// check to see if we're currently running
+// and the last time we ran, etc
+socket.emit('status', { });
+
+
+// the server will send back a response object
+// use this as a sanity check
+socket.on('response', function (data) {
+	console.log("response", data);
+});
+
+
+
+// handle the press on the both button
+$('#btn_both').click(function(e){
+	e.preventDefault();
+	// console.log("press");
+	var o = {
+		action: "both_on"
+	}
+	socket.emit('action', o);
+
+	var page = 'both_on.json';
+	var status = "Off";
+
+	if(state == 0){ // toggle on
+		state = 1;
+		page = 'both_on.json';
+		msg = 'OFF';
+		var d = new Date();
+		var dd = d.toLocaleString();
+		var m = moment(dd);
+		$("#last_started").text(new Date(dd).toLocaleString());
+		$("#duration").text(m.fromNow());
+	}else{
+		state = 0;  // toggle off
+		page = 'both_off.json';
+		msg = 'Garden & Front On';
+		$("#last_started").text('');
+		$("#duration").text('');
+	}
+
+	// $.ajax({
+	// 	url: '/actions/' + page
+	// }).done(function(data){
+	// 	$('#btn_both').html(msg);
+	// 	console.log(data);
+	// });
+
+});
+
+
+$('#btn_front').click(function(e){
+	e.preventDefault();
+
+
+	if(state == 0){ // toggle on
+		state = 1;
+		page = 'front_on.json';
+		msg = 'OFF';
+	}else{
+		state = 0;  // toggle off
+		page = 'front_off.json';
+		msg = 'Front On';
+	}
+
+	$.ajax({
+		url: '/actions/' + page
+	}).done(function(data){
+		$('#btn_front').html(msg);
+	});
+
+});
+
+
+$('#btn_garden').click(function(e){
+	e.preventDefault();
+
+
+	if(state == 0){ // toggle on
+		state = 1;
+		page = 'garden_on.json';
+		msg = 'OFF';
+	}else{
+		state = 0;  // toggle off
+		page = 'garden_off.json';
+		msg = 'Garden On';
+	}
+
+	$.ajax({
+		url: '/actions/' + page
+	}).done(function(data){
+		$('#btn_garden').html(msg);
+	});
+
+});
+
+
+</script>
+
+
+

@@ -1,0 +1,62 @@
+<div class="hero-unit">
+  <h2>All Actions</h2>
+  <%- linkTo('Create a new Action', addActionPath, {class: 'btn pull-right'}); %>
+</div>
+
+<div id="actions-list">
+<% if (actions) { %>
+<% for (var i = 0, ii = actions.length; i < ii; i++) { %>
+  <div class="row list-item" id="action-<%= actions[i].id; %>">
+    <div class="span8">
+      <h3><%- linkTo(actions[i].id, actionPath(actions[i].id)); %></h3>
+    </div>
+    <div class="span4">
+      <h3><i class="icon-list-alt"></i><%= actions[i].id; %></h3>
+    </div>
+  </div>
+<% } %>
+<% } %>
+</div>
+
+<script type="text/javascript">
+$(function () {
+  geddy.io.addListenersForModels(['Action']);
+
+  var renderTemplate = function (action) {
+    var template = [ ''
+      , '<div class="row list-item" id="action-' + action.id + '">'
+      , '  <div class="span8">'
+      , '    <h3><a href="/actions/' + action.id + '">' + action.id + '</a></h3>'
+      , '  </div>'
+      , '  <div class="span4">'
+      , '    <h3><i class="icon-list-alt"></i>' + action.id + '</h3>'
+      , '  </div>'
+      , '</div>'
+    ].join('');
+
+    return $(template);
+  }
+
+  var ActionsController = function (opts) {
+    this.options = opts || {};
+
+    this.create = function (action) {
+      $('#actions-list').append(renderTemplate(action));
+    };
+
+    this.update = function (action) {
+      $('#action-' + action.id).replaceWith(renderTemplate(action));
+    };
+
+    this.remove = function (id) {
+      $('#action-' + id).remove();
+    };
+
+  };
+  geddy.Actions = new ActionsController();
+
+  geddy.model.Action.on('save'   , geddy.Actions.create);
+  geddy.model.Action.on('update' , geddy.Actions.update);
+  geddy.model.Action.on('remove' , geddy.Actions.remove);
+});
+</script>
