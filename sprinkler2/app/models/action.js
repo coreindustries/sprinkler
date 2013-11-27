@@ -1,8 +1,10 @@
 var gpio = require("pi-gpio");
+var colors = require('colors');
 
 var Action = function () {
 
   this.pins = {front: 22, garden: 16};
+  this.auto_shutoff_duration = 15*60*1000; // 15 min
 
   this.defineProperties({
     temp: {type: 'datatime'},
@@ -16,28 +18,46 @@ var Action = function () {
   });
 
 
+
+
+  /* the front end calls this with an object
+  var o = {
+    action: "both_on"
+  }
+  socket.emit('action', o);
+  */
   this.setStatus = function(o){
-    console.log("Action.setStatus", o);
+    console.log("Action.setStatus".bold.red, o);
     // make updates here
     switch (o.action){
-      case 'both_on':
-        console.log("BOTH");
+      case 'toggle_both':
+        console.log("TURN ON BOTH");
+        this.toggleGarden();
+        this.toggleFront();
+        this.areAllOff();
         break;
       case 'garden':
-        console.log("GARDEN");
+        this.toggleGarden();
+        this.areAllOff();
         break;
       case 'front':
-        console.log("FRONT");
+        this.toggleFront();
+        this.areAllOff();
         break;
       case 'off':
-        console.log("ALL OFF");
+        this.allOff();
+        this.areAllOff();
         break;
     }
 
 
-
+    // now that we've updated the action obj
+    // set back the result
     return this.getStatus();
   };
+
+
+
 
   this.getStatus = function(){
     var o = {
@@ -49,45 +69,108 @@ var Action = function () {
       front_on: this.front_on,
       auto_shutoff: this.auto_shutoff
     };
-    console.log("Action.getStatus", o);
+    console.log("Action.getStatus".white);
+    console.log(o);
     return o;
   };
 
-  /*
-  this.property('login', 'string', {required: true});
-  this.property('password', 'string', {required: true});
-  this.property('lastName', 'string');
-  this.property('firstName', 'string');
 
-  this.validatesPresent('login');
-  this.validatesFormat('login', /[a-z]+/, {message: 'Subdivisions!'});
-  this.validatesLength('login', {min: 3});
-  // Use with the name of the other parameter to compare with
-  this.validatesConfirmed('password', 'confirmPassword');
-  // Use with any function that returns a Boolean
-  this.validatesWithFunction('password', function (s) {
-      return s.length > 0;
-  });
 
-  // Can define methods for instances like this
-  this.someMethod = function () {
-    // Do some stuff
+
+  this.toggleGarden = function(){
+    console.log("toggleGarden");
+    if(!this.garden_on){
+      this.turnOn('garden');
+      this.garden_on = true;
+      this.last_run_start_time = Date.now();
+    }else{
+      this.turnOff('garden');
+      this.garden_on = false;
+    }
+
   };
+
+
+  this.toggleFront = function(){
+    console.log("toggleFront");
+    if(!this.front_on){
+      this.turnOn('front');
+      this.front_on = true;
+      this.last_run_start_time = Date.now();
+    }else{
+      this.turnOff('front');
+      this.front_on = false;
+    }
+  };
+
+
+  /*  TURN OFF a specific pin
+  pass in "garden", or "front"
   */
+  this.turnOff = function(o){
+    console.log("turnOff", o);
+    var p = this.pins[o];
+    gpio.open(p, "output", function(err) {
+      if(err){ geddy.log.error(JSON.stringify(err).underline.red); }
+        gpio.write(p, 0, function() {
+          gpio.close(p);
+      });
+    });
+  };
+
+
+
+  /*  TURN ON a specific pin
+  pass in "garden", or "front"
+  */
+  this.turnOn = function(o){
+    console.log("turnOn", o);
+    var p = this.pins[o];
+    gpio.open(p, "output", function(err) {
+      if(err){ geddy.log.error(JSON.stringify(err).underline.red); }
+        gpio.write(p, 1, function() {
+          gpio.close(p);
+      });
+    });
+  };
+
+
+
+  /* loop over our pins, and turn the all off */
+  this.allOff = function(){
+    console.log("ALL OFF");
+    this.garden_on = false;
+    this.front_on = false;
+    this.currently_running = false;
+
+    for(var i in this.pins){
+      this.turnOff(i);
+    }
+  };
+
+
+  
+  // check to see if everythign is off
+  // update this.last_run_end_time
+  this.areAllOff = function(){
+    if(!this.garden_on && !this.front_on){
+      this.last_run_end_time = Date.now();
+      this.currently_running = false;
+      return true;
+    }else{
+      this.currently_running = true;
+      return false;
+    }
+  };
+
+
+  // automatically reset our pins on startup
+  this.allOff();
+
 
 };
 
-/*
-// Can also define them on the prototype
-Action.prototype.someOtherMethod = function () {
-  // Do some other stuff
-};
-// Can also define static methods and properties
-Action.someStaticMethod = function () {
-  // Do some other stuff
-};
-Action.someStaticProperty = 'YYZ';
-*/
+
 
 exports.Action = Action;
 

@@ -7,7 +7,8 @@
 	"pi-gpio" : "0.0.2",
   	"geddy" : "0.11.8",
     "jlivetime" : "0.0.11",
-    "socket.io" : "0.9.16"
+    "socket.io" : "0.9.16",
+    "colors" : "0.6.2"
   	},
   "engines": {
     "node": "0.8.x"

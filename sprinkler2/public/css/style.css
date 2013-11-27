@@ -1,9 +1,13 @@
 body {
   padding-top: 60px;
   padding-bottom: 40px;
-  background: url('../img/whitey.png');
+  /*background: url('../img/whitey.png');*/
+  background-color: #aaa;
 }
 
+.hero-unit{
+  padding:30px;
+}
 .navbar-fixed-top {
   box-shadow: 0px 0px 3px #000;
   border-bottom: 1px solid #999;
@@ -17,7 +21,9 @@ body {
 }
 
 .geddy-welcome-box h1 {
-  line-height: 1.25;
+  /*line-height: 1.25;*/
+  margin:0;
+  padding: 0;
   margin-bottom: 20px;
 }
 

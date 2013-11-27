@@ -31,7 +31,26 @@ socket.emit('status', { });
 // use this as a sanity check
 socket.on('response', function (data) {
 	console.log("response", data);
+
+	//handle both button
+	if(data.garden_on && data.front_on){
+		$('#btn_both').html('OFF');
+	}else{
+		$('#btn_both').html('Garden & Front');
+	}
+	if(data.front_on){
+		$('#btn_front').html('OFF');
+	}else{
+		$('#btn_front').html('Front');
+	}
+	if(data.garden_on){
+		$('#btn_garden').html('OFF');
+	}else{
+		$('#btn_garden').html('Garden ');
+	}
 });
+
+
 
 
 
@@ -40,29 +59,29 @@ $('#btn_both').click(function(e){
 	e.preventDefault();
 	// console.log("press");
 	var o = {
-		action: "both_on"
+		action: "toggle_both"
 	}
 	socket.emit('action', o);
 
-	var page = 'both_on.json';
-	var status = "Off";
+	// var page = 'both_on.json';
+	// var status = "Off";
 
-	if(state == 0){ // toggle on
-		state = 1;
-		page = 'both_on.json';
-		msg = 'OFF';
-		var d = new Date();
-		var dd = d.toLocaleString();
-		var m = moment(dd);
-		$("#last_started").text(new Date(dd).toLocaleString());
-		$("#duration").text(m.fromNow());
-	}else{
-		state = 0;  // toggle off
-		page = 'both_off.json';
-		msg = 'Garden & Front On';
-		$("#last_started").text('');
-		$("#duration").text('');
-	}
+	// if(state == 0){ // toggle on
+	// 	state = 1;
+	// 	page = 'both_on.json';
+	// 	msg = 'OFF';
+	// 	var d = new Date();
+	// 	var dd = d.toLocaleString();
+	// 	var m = moment(dd);
+	// 	$("#last_started").text(new Date(dd).toLocaleString());
+	// 	$("#duration").text(m.fromNow());
+	// }else{
+	// 	state = 0;  // toggle off
+	// 	page = 'both_off.json';
+	// 	msg = 'Garden & Front On';
+	// 	$("#last_started").text('');
+	// 	$("#duration").text('');
+	// }
 
 	// $.ajax({
 	// 	url: '/actions/' + page
@@ -76,23 +95,26 @@ $('#btn_both').click(function(e){
 
 $('#btn_front').click(function(e){
 	e.preventDefault();
-
-
-	if(state == 0){ // toggle on
-		state = 1;
-		page = 'front_on.json';
-		msg = 'OFF';
-	}else{
-		state = 0;  // toggle off
-		page = 'front_off.json';
-		msg = 'Front On';
+	var o = {
+		action: "front"
 	}
+	socket.emit('action', o);
 
-	$.ajax({
-		url: '/actions/' + page
-	}).done(function(data){
-		$('#btn_front').html(msg);
-	});
+	// if(state == 0){ // toggle on
+	// 	state = 1;
+	// 	page = 'front_on.json';
+	// 	msg = 'OFF';
+	// }else{
+	// 	state = 0;  // toggle off
+	// 	page = 'front_off.json';
+	// 	msg = 'Front On';
+	// }
+
+	// $.ajax({
+	// 	url: '/actions/' + page
+	// }).done(function(data){
+	// 	$('#btn_front').html(msg);
+	// });
 
 });
 
@@ -100,22 +122,26 @@ $('#btn_front').click(function(e){
 $('#btn_garden').click(function(e){
 	e.preventDefault();
 
-
-	if(state == 0){ // toggle on
-		state = 1;
-		page = 'garden_on.json';
-		msg = 'OFF';
-	}else{
-		state = 0;  // toggle off
-		page = 'garden_off.json';
-		msg = 'Garden On';
+	var o = {
+		action: "garden"
 	}
+	socket.emit('action', o);
 
-	$.ajax({
-		url: '/actions/' + page
-	}).done(function(data){
-		$('#btn_garden').html(msg);
-	});
+	// if(state == 0){ // toggle on
+	// 	state = 1;
+	// 	page = 'garden_on.json';
+	// 	msg = 'OFF';
+	// }else{
+	// 	state = 0;  // toggle off
+	// 	page = 'garden_off.json';
+	// 	msg = 'Garden On';
+	// }
+
+	// $.ajax({
+	// 	url: '/actions/' + page
+	// }).done(function(data){
+	// 	$('#btn_garden').html(msg);
+	// });
 
 });
 
