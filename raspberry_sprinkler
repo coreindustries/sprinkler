@@ -1,0 +1,33 @@
+#! /bin/sh
+# /etc/init.d/raspberry_sprinkler 
+
+### BEGIN INIT INFO
+# Provides:          raspberry_sprinkler
+# Required-Start:    $all
+# Required-Stop:     $local_fs $remote_fs $network $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Starts up the sprinker system. port 4000
+# Description:       https://github.com/coreindustries/sprinkler
+### END INIT INFO
+
+# If you want a command to always run, put it here
+
+# Carry out specific functions when asked to by the system
+case "$1" in
+  start)
+    echo "Starting raspberry_sprinkler \n"
+    /home/pi/sprinkler/sprinkler2/startup.sh
+    ;;
+  stop)
+    echo "Stopping raspberry_sprinkler NOT IMPLIMENTED YET"
+    # kill application you want to stop
+    #killall noip2
+    ;;
+  *)
+    echo "Usage: /etc/init.d/raspberry_sprinkler {start|stop}"
+    exit 1
+    ;;
+esac
+
+exit 0
