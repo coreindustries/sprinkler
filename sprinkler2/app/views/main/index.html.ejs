@@ -1,30 +1,47 @@
 <script src="/socket.io/socket.io.js"></script>
+<script src="/js/moment.js"></script>
+
+
 
 <div class="hero-unit geddy-welcome-box">
   <h1>Sprinkler</h1>
-  <p><%- linkTo('Garden & Front On', '/actions/both', {class: 'btn btn-primary btn-large', id: 'btn_both'}) %></p>
-  <p></p>
-  <p><%- linkTo('Front On', '/actions/front_on', {class: 'btn btn-primary btn-large', id: 'btn_front'}) %></p>
-  <p><%- linkTo('Garden On', '/actions/garden_on', {class: 'btn btn-primary btn-large', id: 'btn_garden'}) %></p>
+  
+  	<p>
+	<button id="btn_both" class="btn btn-success btn-lg">
+	  <span class="glyphicon glyphicon-play"></span> Garden &amp; Front
+	</button>
+	</p>
+
+	<p>
+	<button id="btn_front" class="btn btn-success btn-lg">
+	  <span class="glyphicon glyphicon-play"></span>Front
+	</button>
+	</p>
+
+	<p>
+	<button id="btn_garden" class="btn btn-success btn-lg">
+	  <span class="glyphicon glyphicon-play"></span>Garden
+	</button>
+	</p>
+
+
+	<div id="stats">
+		<!-- <p id="last_started">Last started: <span ></span></p> -->
+		<p id="last_ended">Last run: <span ></span></p>
+		<p id="auto_shutoff">Auto end: <span ></span></p>
+	</div><!-- /stats -->
+
 </div>
 
-<div id="stats">
-	<ul>
-		<li>Last started: <span id="last_started"></span></li>
-		<li><span id="duration"></span></li>
-	</ul>
-</div><!-- /stats -->
+
 
 <script>
 
-var state = 0; // off by default
+var updateInterval; // our status interval
 
-var socket = io.connect('http://localhost');
+// var socket = io.connect('http://localhost');
+var socket = io.connect('http://192.168.1.13');
 
-
-// check to see if we're currently running
-// and the last time we ran, etc
-socket.emit('status', { });
 
 
 // the server will send back a response object
@@ -33,10 +50,18 @@ socket.on('response', function (data) {
 	console.log("response", data);
 
 	//handle both button
-	if(data.garden_on && data.front_on){
-		$('#btn_both').html('OFF');
-	}else{
-		$('#btn_both').html('Garden & Front');
+	if(data.garden_on && data.front_on){ // show off button
+		$('#btn_both').html('<span class="glyphicon glyphicon-stop"></span> OFF');
+		$('#btn_both').removeClass('btn-success');
+		$('#btn_both').addClass('btn-danger');
+		$('#btn_front').attr('disabled', "disabled");
+		$('#btn_garden').attr('disabled', "disabled");
+	}else{	// show on button
+		$('#btn_both').html('<span class="glyphicon glyphicon-play"></span> Garden & Front');
+		$('#btn_both').addClass('btn-success');
+		$('#btn_both').removeClass('btn-danger');
+		$('#btn_front').removeAttr('disabled');
+		$('#btn_garden').removeAttr('disabled');
 	}
 	if(data.front_on){
 		$('#btn_front').html('OFF');
@@ -48,6 +73,11 @@ socket.on('response', function (data) {
 	}else{
 		$('#btn_garden').html('Garden ');
 	}
+
+
+	// update status
+	updateStatus(data);
+
 });
 
 
@@ -57,93 +87,60 @@ socket.on('response', function (data) {
 // handle the press on the both button
 $('#btn_both').click(function(e){
 	e.preventDefault();
-	// console.log("press");
-	var o = {
-		action: "toggle_both"
-	}
-	socket.emit('action', o);
-
-	// var page = 'both_on.json';
-	// var status = "Off";
-
-	// if(state == 0){ // toggle on
-	// 	state = 1;
-	// 	page = 'both_on.json';
-	// 	msg = 'OFF';
-	// 	var d = new Date();
-	// 	var dd = d.toLocaleString();
-	// 	var m = moment(dd);
-	// 	$("#last_started").text(new Date(dd).toLocaleString());
-	// 	$("#duration").text(m.fromNow());
-	// }else{
-	// 	state = 0;  // toggle off
-	// 	page = 'both_off.json';
-	// 	msg = 'Garden & Front On';
-	// 	$("#last_started").text('');
-	// 	$("#duration").text('');
-	// }
-
-	// $.ajax({
-	// 	url: '/actions/' + page
-	// }).done(function(data){
-	// 	$('#btn_both').html(msg);
-	// 	console.log(data);
-	// });
-
+	socket.emit('action', { action: "toggle_both" });
 });
+
 
 
 $('#btn_front').click(function(e){
 	e.preventDefault();
-	var o = {
-		action: "front"
-	}
-	socket.emit('action', o);
-
-	// if(state == 0){ // toggle on
-	// 	state = 1;
-	// 	page = 'front_on.json';
-	// 	msg = 'OFF';
-	// }else{
-	// 	state = 0;  // toggle off
-	// 	page = 'front_off.json';
-	// 	msg = 'Front On';
-	// }
-
-	// $.ajax({
-	// 	url: '/actions/' + page
-	// }).done(function(data){
-	// 	$('#btn_front').html(msg);
-	// });
-
+	socket.emit('action', { action: "front" });
 });
 
 
 $('#btn_garden').click(function(e){
 	e.preventDefault();
-
-	var o = {
-		action: "garden"
-	}
-	socket.emit('action', o);
-
-	// if(state == 0){ // toggle on
-	// 	state = 1;
-	// 	page = 'garden_on.json';
-	// 	msg = 'OFF';
-	// }else{
-	// 	state = 0;  // toggle off
-	// 	page = 'garden_off.json';
-	// 	msg = 'Garden On';
-	// }
-
-	// $.ajax({
-	// 	url: '/actions/' + page
-	// }).done(function(data){
-	// 	$('#btn_garden').html(msg);
-	// });
-
+	socket.emit('action', { action: "garden" });
 });
+
+
+
+function updateStatus(data){
+
+	if(!data.currently_running){
+		$("#auto_shutoff").hide();
+	}else{
+		$("#auto_shutoff").show();
+	}
+
+	// $("#last_started span").html(
+	// 	moment(data.last_run_start_time).fromNow()
+	// 	);
+	$("#last_ended span").html(
+		moment(data.last_run_end_time).fromNow()
+		);
+	$("#auto_shutoff span").html(
+		moment(data.auto_shutoff).fromNow()
+		);
+}
+
+
+
+updateInterval = setInterval(sendStatusRequest, 1000);
+
+
+// check to see if we're currently running
+// and the last time we ran, etc
+function sendStatusRequest(){
+	socket.emit('status', { });
+}
+
+
+// run for the first time
+sendStatusRequest();
+
+
+
 
 
 </script>

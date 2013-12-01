@@ -1,6 +1,8 @@
 var gpio = require("pi-gpio");
 var colors = require('colors');
 
+
+
 var Action = function () {
 
   this.pins = {front: 22, garden: 16};
@@ -8,7 +10,7 @@ var Action = function () {
 
   this.defineProperties({
     temp: {type: 'datatime'},
-    server_time_epoch: Date.now(),
+    // server_time_epoch: Date.now(),
     last_run_start_time: {type: 'datetime'},
     last_run_end_time: {type: 'datetime'},
     currently_running: {type: 'boolean'},
@@ -61,7 +63,7 @@ var Action = function () {
 
   this.getStatus = function(){
     var o = {
-      server_time_epoch: Date(),
+      // server_time_epoch: Date(),
       last_run_start_time: this.last_run_start_time,
       last_run_end_time: this.last_run_end_time,
       currently_running: this.currently_running,
@@ -71,6 +73,7 @@ var Action = function () {
     };
     console.log("Action.getStatus".white);
     console.log(o);
+    this.manageAutoShutoff();
     return o;
   };
 
@@ -83,6 +86,7 @@ var Action = function () {
       this.turnOn('garden');
       this.garden_on = true;
       this.last_run_start_time = Date.now();
+      this.calculateAutoShutoff();
     }else{
       this.turnOff('garden');
       this.garden_on = false;
@@ -97,6 +101,7 @@ var Action = function () {
       this.turnOn('front');
       this.front_on = true;
       this.last_run_start_time = Date.now();
+      this.calculateAutoShutoff();
     }else{
       this.turnOff('front');
       this.front_on = false;
@@ -142,6 +147,7 @@ var Action = function () {
     this.garden_on = false;
     this.front_on = false;
     this.currently_running = false;
+    this.auto_shutoff = false;
 
     for(var i in this.pins){
       this.turnOff(i);
@@ -160,6 +166,24 @@ var Action = function () {
     }else{
       this.currently_running = true;
       return false;
+    }
+  };
+
+
+  // calculate our turn off tim 
+  this.calculateAutoShutoff = function(){
+    var minutes = 1;
+    this.auto_shutoff = this.last_run_start_time + (minutes*60*1000);
+    // console.log("\n\n***manageAutoShutoff", this.auto_shutoff, this.last_run_start_time );
+  };
+
+
+  // shutus down when when we pass our auto shutoff
+  this.manageAutoShutoff = function(){
+    console.log("manageAutoShutoff");
+    if(this.auto_shutoff < Date.now()){
+      console.log("** SHUTDOWN **");
+      this.allOff();
     }
   };
 
