@@ -6,11 +6,10 @@ var colors = require('colors');
 var Action = function () {
 
   this.pins = {front: 22, garden: 16};
-  this.auto_shutoff_duration = 15*60*1000; // 15 min
+  var minutes = 1; // 15 min
+  this.auto_shutoff_duration = minutes*60*1000; 
 
   this.defineProperties({
-    temp: {type: 'datatime'},
-    // server_time_epoch: Date.now(),
     last_run_start_time: {type: 'datetime'},
     last_run_end_time: {type: 'datetime'},
     currently_running: {type: 'boolean'},
@@ -33,7 +32,7 @@ var Action = function () {
     // make updates here
     switch (o.action){
       case 'toggle_both':
-        console.log("TURN ON BOTH");
+        // console.log("TURN ON BOTH");
         this.toggleGarden();
         this.toggleFront();
         this.areAllOff();
@@ -72,7 +71,7 @@ var Action = function () {
       auto_shutoff: this.auto_shutoff
     };
     console.log("Action.getStatus".white);
-    console.log(o);
+    // console.log(o);
     this.manageAutoShutoff();
     return o;
   };
@@ -172,16 +171,14 @@ var Action = function () {
 
   // calculate our turn off tim 
   this.calculateAutoShutoff = function(){
-    var minutes = 1;
-    this.auto_shutoff = this.last_run_start_time + (minutes*60*1000);
-    // console.log("\n\n***manageAutoShutoff", this.auto_shutoff, this.last_run_start_time );
+    this.auto_shutoff = this.last_run_start_time + this.auto_shutoff_duration;
   };
 
 
   // shutus down when when we pass our auto shutoff
   this.manageAutoShutoff = function(){
-    console.log("manageAutoShutoff");
-    if(this.auto_shutoff < Date.now()){
+    // console.log("manageAutoShutoff");
+    if(this.auto_shutoff < Date.now() & this.currently_running){
       console.log("** SHUTDOWN **");
       this.allOff();
     }
