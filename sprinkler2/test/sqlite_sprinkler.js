@@ -3,10 +3,14 @@
  */
 
 "use strict";
-var duration = 15; // minutes
-var run_every = 24; // hours
+// require('fs');
+
+var duration    = 15; // minutes
+// var run_every   = 24; // hours
+var schedule = ["6:05","18:01"]; // array of start time hours 24-hr clock values
 var log4js  = require('log4js');
 var sqlite3 = require('sqlite3').verbose();
+var moment = require('moment');
 var db, check_interval;
 
 /*
@@ -82,19 +86,68 @@ if we're not running, see if we should be
 if we're running, see if we should not be
 */
 function check(){
-    l.trace("check", run_every, new Date());
+    l.trace("check", new Date());
 }
 
 /*
 on the first run through, set up our database and schedule
 */
 function first_run(){
+    // fs.unlink('./sprinkler.sqlite3', function (err) {
+    //     if (err) throw err;
+    //     console.log('successfully deleted database');
+    // });
     createDb();
     check_interval = setInterval(check,1000);
 }
 
 
 
+// kick off the scheduling
+function startScheduling(){
+    parseSchedule();
+}
+
+// YYYY-MM-DD HH:MM
+function parseSchedule() {
+    l.trace("parseSchedule", schedule);
+    var moments = []; // array of moment objects
+
+    var now = moment();
+    l.info("Current Time: ", now.format("YYYY-MM-DD HH:mm"));
+    // l.debug(now);
+
+    // if a time is earlier in the day, make it for tomorrow
+    // l.trace("Now hours: ", now.getHours()); 
+    var today = now.format('YYYY-MM-DD');
+    // //var tomorrow = 
+    // l.trace("Today: ",today);
+
+    // loop over schedule times
+    for(var i=0; i<schedule.length; i++){
+        l.debug(schedule[i]);
+        var m = moment(new Date(today+" "+schedule[i]));
+
+        // handle schedules that bump to the next day
+        if(m < moment()){
+            l.warn("Date is in the past", m.format('YYYY-MM-DD'));
+            // var m = moment(d);
+            m.add('days', 1);
+            l.warn("check date: ", m.format("YYYY-MM-DD HH:mm"));
+            
+        }
+        moments.push(m);
+
+    }
+
+
+    // see which scheduled time is closest to now, we'll save this to the DB
+    l.debug("moments: ", moments);
+
+
+
+
+}
 
 
 
@@ -104,14 +157,14 @@ function first_run(){
 
 function createDb() {
     l.info("createDb");
-    db = new sqlite3.Database('sprinkler.sqlite3');
+    db = new sqlite3.Database('sprinkler.sqlite3', createTable);
 }
 
 
 function createTable() {
     l.info("createTable sprinkler");
-    // db.run("CREATE TABLE IF NOT EXISTS sprinkler (last_date TEXT)", insertRows);
-    db.run("CREATE TABLE sprinkler (last_run, status, scheduled_stop, scheduled_start, updated)", insertRows);
+    // db.run("DROP TABLE sprinkler");
+    db.run("CREATE TABLE IF NOT EXISTS sprinkler (last_run, status, scheduled_stop, scheduled_start, updated)", startScheduling);
 }
 
 function insertRows() {
@@ -144,15 +197,6 @@ function closeDb() {
     l.trace("closeDb");
     db.close();
 }
-
-// function runChainExample() {
-//     createDb();
-// }
-
-// runChainExample();
-
-
-
 
 
 
