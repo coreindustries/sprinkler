@@ -1,0 +1,13 @@
+{
+  "name": "sprinkler",
+  "version": "0.0.2",
+  "dependencies": {
+    "colors": "0.6.2",
+    "log4js": "0.6.17",
+    "express": "4.x"
+  },
+    "engines": {
+    "node": "0.10.20",
+    "npm": "1.2.x"
+  }
+}
