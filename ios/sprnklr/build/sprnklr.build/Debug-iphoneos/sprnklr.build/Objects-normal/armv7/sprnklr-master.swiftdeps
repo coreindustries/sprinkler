@@ -1,0 +1,5 @@
+version: "Apple Swift version 1.2 (swiftlang-602.0.53.1 clang-602.0.53)"
+options: "e0e0fdeb8ae9af1c54bb77cbf268e957"
+inputs: 
+- "/Users/coreysi/sites/prototypes/sprinkler/ios/sprnklr/sprnklr/ViewController.swift"
+- "/Users/coreysi/sites/prototypes/sprinkler/ios/sprnklr/sprnklr/AppDelegate.swift"

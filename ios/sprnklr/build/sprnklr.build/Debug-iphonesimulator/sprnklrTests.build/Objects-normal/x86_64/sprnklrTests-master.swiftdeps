@@ -1,0 +1,4 @@
+version: "Apple Swift version 1.2 (swiftlang-602.0.53.1 clang-602.0.53)"
+options: "aa5cab1d8639ab6e7da2a2adf1305a0d"
+inputs: 
+- "/Users/coreysi/sites/prototypes/sprinkler/ios/sprnklr/sprnklrTests/sprnklrTests.swift"
